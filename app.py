@@ -6,9 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from models import mysqldb
 
 app = Flask(__name__, static_folder='static')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://python:Dingtalk1234561017@192.168.1.15:3306/python'
-# 实例化sqlalchemy对象，并且和程序实例关联
-db = SQLAlchemy(app)
 
 @app.route("/")
 def index():

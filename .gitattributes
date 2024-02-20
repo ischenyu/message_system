@@ -1,1 +1,2 @@
-*.js linguist-language=python
+layui.js linguist-language=python
+jQuery.js linguist-language=python
