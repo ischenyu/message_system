@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from models import email_captcha
 import random, time
-# from config import Config
-from flask_sqlalchemy import SQLAlchemy
 from models import mysqldb
 
 app = Flask(__name__, static_folder='static')
