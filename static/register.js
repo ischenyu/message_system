@@ -38,11 +38,13 @@ layui.use(function(){
         data: JSON.stringify(field),
         success: function(res){
             if(res.code === 200){
-                layer.msg('注册成功', {icon: 6});
-                window.location.replace("/home");
-            }else{
-                layer.msg('注册失败', {icon: 5});
-            }
+              layer.msg('注册成功', {icon: 6});
+              window.location.replace("/home");
+          } else if(res.code === 402) {
+              layer.msg('用户已存在', {icon: 6});
+          } else {
+              layer.msg('注册失败', {icon: 5});
+          }
         },
         error: function(xhr, status, error) {
             console.log("Error:", error);
