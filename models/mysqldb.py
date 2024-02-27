@@ -26,57 +26,73 @@ def close_connections():
         redis_pool.disconnect()
     except Exception as e:
         logging.error("An error occurred while closing connections: %s", e)
+
 def User_signup(username, password, email):
-    init_time = timestamp()
-    password = hashlib.sha256(password.encode()).hexdigest()
-    sql = """INSERT INTO python.user(username, password, email, init_time)
-      VALUES ('%s', '%s', '%s', '%s')""" % (username, password, email, init_time)
-    # 使用cursor()方法获取操作游标 
+    init_time = int(time.time())
+    password_hash = hashlib.sha256(password.encode()).hexdigest()
+
     cursor = db.cursor()
+
     try:
-        # 执行sql语句
-        cursor.execute(sql)
-        # 提交到数据库执行
+        # 检查用户是否存在，使用参数化查询以防止 SQL 注入攻击
+        sql_test = "SELECT * FROM python.user WHERE username=%s"
+        cursor.execute(sql_test, (username,))
+        
+        if cursor.rowcount > 0:
+            return 114
+
+        sql = "INSERT INTO python.user(username, password, email, init_time) VALUES (%s, %s, %s, %s)"
+        
+        # 执行插入操作，使用参数化查询以防止 SQL 注入攻击
+        cursor.execute(sql, (username, password_hash, email, init_time))
+        
+        # 提交事务并关闭游标
         db.commit()
-        db.close()
+        
         return True
-    except:
-        # 发生错误时回滚
+
+    except Exception as e:
+        logging.error("An error occurred during user signup: %s", e)
+        
+        # 回滚事务并关闭游标
         db.rollback()
-        db.close()
+        
         return False
+
     finally:
-        del username
-        del password
-    
+        cursor.close()
+
 def User_login(username, password):
     try:
         password_hash = hashlib.sha256(password.encode()).hexdigest()
-        
-        # 尝试从缓存中获取用户信息
+
         cached_user = redis_client.get(username)
+        
         if cached_user:
             return True
         
         sql = "SELECT * FROM python.user WHERE username=%s AND password=%s"
         
         with db.cursor() as cursor:
-            cursor.execute(sql, (username, password_hash))
+            cursor.execute(sql, (username,password_hash))
             results = cursor.fetchall()
+            
             if len(results) == 0:
                 return False
-            else:
-                # 将用户信息缓存到 Redis 中，有效期设置为一定时间
-                with redis_client.pipeline() as pipe:
-                    pipe.setex(username, 3600, 'authenticated')
-                    pipe.execute()
+                
+            else: 
+                with redis_client.pipeline() as pipe: 
+                    pipe.setex(username ,3600,'authenticated') 
+                    pipe.execute() 
+                    
                 return True
     
-    except Exception as e:
-        logging.error("An error occurred: %s", e)
-        return 'error'
-    finally:
-        close_connections()
+    except Exception as e: 
+         logging.error("An error occurred while user login: %s",e) 
+         return 'error' 
+    
+    finally: 
+         close_connections()
     
 def User_forget(username, password):
     password = hashlib.sha256(password.encode()).hexdigest()
