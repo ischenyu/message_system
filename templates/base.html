@@ -2,15 +2,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quick Start - Layui</title>
+  <title>myvotes-简单的投票系统</title>
   <link href="/static/css/layui.css" rel="stylesheet">
 </head>
 
 <ul class="layui-nav">
-  <li class="layui-nav-item layui-this"><a href="/">home</a></li>
+  <li class="layui-nav-item layui-this"><a href="/">主页</a></li>
   <li class="layui-nav-item">
-    <a href="/login">login</a>
+    <a href="/login">登录</a>
   </li>
-  <li class="layui-nav-item"><a href="/register">register</a></li>
+  <li class="layui-nav-item"><a href="/register">注册</a></li>
+  <li class="layui-nav-item" lay-unselect>
+    <a href="javascript:;">
+      <img src="https://unpkg.com/outeres@0.0.10/demo/avatar/1.jpg" class="layui-nav-img">
+    </a>
+    {% if logined %}
+      <dl class="layui-nav-child">
+        <dd><a href="javascript:;">控制台</a></dd>
+        <hr>
+        <dd style="text-align: center;"><a href="">退出</a></dd>
+      </dl>
+    {% else %}
+    <dl class="layui-nav-child">
+      <dd><a href="javascript:;">未登录</a></dd>
+    </dl>
+    {% endif %}
+  </li>
 </ul>
 <script src="/static/layui.js"></script>

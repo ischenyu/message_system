@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>找回密码</title>
+    <link href="/static/css/layui.css" rel="stylesheet">
+    <script src="https://upcdn.b0.upaiyun.com/libs/jquery/jquery-2.0.2.min.js"></script>
+    <link href="/static/css/forget.css" rel="stylesheet">
+</head>
+<body>
+<form class="layui-form">
+  <div class="demo-reg-container">
+    <div class="layui-form-item">
+      <div class="layui-row">
+        <div class="layui-col-xs7">
+          <div class="layui-input-wrap">
+            <div class="layui-input-prefix">
+              <i class="layui-icon layui-icon-email"></i>
+            </div>
+            <input type="text" name="email" value="" lay-verify="required|email" placeholder="邮箱" lay-reqtext="请填写邮箱" autocomplete="off" class="layui-input" id="reg-email">
+          </div>
+        </div>
+        <div class="layui-col-xs5">
+          <div style="margin-left: 11px;">
+            <button type="button" class="layui-btn layui-btn-fluid layui-btn-primary" lay-on="reg-get-vercode">获取验证码</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-wrap">
+        <div class="layui-input-prefix">
+          <i class="layui-icon layui-icon-vercode"></i>
+        </div>
+        <input type="text" name="vercode" value="" lay-verify="required" placeholder="验证码" lay-reqtext="请填写验证码" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-wrap">
+        <div class="layui-input-prefix">
+          <i class="layui-icon layui-icon-password"></i>
+        </div>
+        <input type="password" name="password" value="" lay-verify="required" placeholder="新密码" autocomplete="off" class="layui-input" id="reg-password" lay-affix="eye">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-wrap">
+        <div class="layui-input-prefix">
+          <i class="layui-icon layui-icon-password"></i>
+        </div>
+        <input type="password" name="confirmPassword" value="" lay-verify="required|confirmPassword" placeholder="确认密码" autocomplete="off" class="layui-input" lay-affix="eye">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-reg">注册</button>
+    </div>
+  </div>
+</form>
+
+<script src="/static/layui.js"></script> 
+<script src="/static/forget.js"></script>
+<script src="/static/jquery.js"></script>
+</body>
+</html>

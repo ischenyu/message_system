@@ -17,6 +17,10 @@ layui.use(function(){
             success: function(res){
                 if(res.code === 200){
                     layer.msg('登录成功', {icon: 6});
+                    // 设置要重定向的 URL
+                    var newLocation = '/';
+                    // 执行页面重定向
+                    window.location.href = newLocation;
                 }else{
                     layer.msg('登录失败', {icon: 5});
                 }

@@ -1,23 +1,40 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, make_response, render_template, request, jsonify, redirect, url_for
 from models import email_captcha
 import random, time
 from models import mysqldb
+from itsdangerous import URLSafeSerializer
 
 app = Flask(__name__, static_folder='static')
+app.secret_key = 'cookie_key'  # 设置一个用于签名的秘钥
+# 创建一个序列化器对象
+serializer = URLSafeSerializer(app.secret_key)
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    logining = request.cookies.get('logining')
+    user_email = request.cookies.get('user_email')
+    if logining == 'True':
+        return render_template("index.html", logined=True, email=user_email)
+    else:
+        return render_template("index.html")
 
 @app.route('/login')
 def login():
-    return render_template("login.html")
+    # 从请求的 cookie 中获取名为 'user_email' 的值
+    logining = request.cookies.get('logining')
+    if logining == 'True':
+        # 执行重定向
+        return redirect(url_for('index'))
+    else:
+        return render_template('login.html')
 
 @app.route('/register')
 def register():
     return render_template("register.html")
 
-from flask import jsonify
+@app.route('/forget')
+def forget():
+    return render_template("forget.html")
 
 @app.route('/api/user/register', methods=['POST', 'GET'])
 def api():
@@ -61,9 +78,15 @@ def api_login():
             data = request.get_json()
             username = data['username']
             password = data['password']
-            if mysqldb.User_login(username, password) == True:
-                return jsonify({"success":True, "message": "登录成功", 'code':200})
-                # ToDo：用户信息写入数据库，注册成功后写入cookie，重定向到主页
+            if mysqldb.User_login(username, password):
+                # 用户信息写入数据库，注册成功后写入cookie，重定向到主页.
+                max_age = 604800
+                # 加密用户信息并设置到 Cookie 中
+                encrypted_username = serializer.dumps(username)
+                resp = make_response(jsonify({"success": True, "message": "登录成功", 'code': 200}))
+                resp.set_cookie('user_email', encrypted_username, max_age=max_age)
+                resp.set_cookie('logining', str(True), max_age=max_age)
+                return resp
             elif mysqldb.User_login(username, password) == 'error':
                 return jsonify({"message": "服务器内部错误"}),500
             else:
@@ -91,7 +114,7 @@ def captcha():
             current_time = time.time()
             if current_time - last_request_time[email] < 60:
                 return jsonify({"success": False, 'message': 'Please wait 60 seconds before requesting another captcha'}), 403
-        code = random.randint(000000, 999999)
+        code = random.randint(100000, 999999)
         # 发送验证码到邮箱
         email_captcha.send_email(email, code)
 
@@ -102,6 +125,28 @@ def captcha():
     else:
         return 'Forbidden', 400
 
+@app.route('/api/user/forget', methods=['POST', 'GET'])
+def api_forget():
+    if request.method == 'POST':
+        data = request.get_json()
+        email = data.get('email')
+        input_code = data.get('vercode')
+        password = data.get('password')
+        confirmPassword = data.get('confirmPassword')
+        if email and input_code and password and confirmPassword:
+            if email_captcha.verify_code(email, input_code) == True:
+                if password == confirmPassword:
+                    if mysqldb.User_forget(email, password) == True:
+                        return jsonify({"success": True, 'message': '密码修改成功'})
+                    else:
+                        return jsonify({"success": False, 'message': '密码修改失败'})
+                else:
+                    return jsonify({"success": False, 'message': '两次密码不一致'})
+            else:
+                return jsonify({"success": False, 'message': '验证码错误'})
+        else:
+            return jsonify()
+        return jsonify({"success": True, 'message': '密码修改成功'})
 
 if __name__ == "__main__":
     # 933d9673cc
