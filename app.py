@@ -66,7 +66,6 @@ def api():
                 if email_captcha.verify_code(email, input_code):
                     if mysqldb.User_signup(username, password, email):
                         return jsonify({"code": 200, "success": True, "message": "注册成功"})
-                        # ToDo：用户信息写入数据库，注册成功后重定向到登录页面
                     elif mysqldb.User_signup(username, password, email) == 114:
                         return jsonify({"code": 402, "success": False, "message": "注册失败,用户已存在"})
                     else:
@@ -165,8 +164,7 @@ def api_forget():
             else:
                 return jsonify({"success": False, 'message': '验证码错误'})
         else:
-            return jsonify()
-        return jsonify({"success": True, 'message': '密码修改成功'})
+            return jsonify({"success": True, 'message': '密码修改成功'})
 
 
 if __name__ == "__main__":
