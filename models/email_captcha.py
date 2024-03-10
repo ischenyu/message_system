@@ -1,7 +1,6 @@
 import smtplib
-from email.mime.text import MIMEText
-from email.header import Header
 import threading
+from email.mime.text import MIMEText
 
 from_addr = 'abb1234aabb@163.com'
 smtp_server = 'smtp.163.com'

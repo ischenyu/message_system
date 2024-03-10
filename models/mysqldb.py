@@ -1,10 +1,12 @@
 '''
 editor:ischenyu.
-ToDo:优化请求函数,防止重复请求及SQL注入.
 '''
 
-
-import pymysql, time, hashlib, redis, logging
+import hashlib
+import logging
+import pymysql
+import redis
+import time
 
 # 打开数据库连接
 db = pymysql.connect(host='192.168.1.2',
@@ -19,6 +21,7 @@ redis_client = redis.Redis(connection_pool=redis_pool)
 # 初始化日志记录器
 logging.basicConfig(level=logging.ERROR)  # 设置日志级别为 ERROR 或更高级别
 
+
 def close_connections():
     try:
         if db.open:
@@ -26,6 +29,7 @@ def close_connections():
         redis_pool.disconnect()
     except Exception as e:
         logging.error("An error occurred while closing connections: %s", e)
+
 
 def User_signup(username, password, email):
     init_time = int(time.time())
@@ -51,6 +55,7 @@ def User_signup(username, password, email):
     finally:
         cursor.close()
 
+
 def User_login(username, password):
     try:
         password_hash = hashlib.sha256(password.encode()).hexdigest()
@@ -59,22 +64,23 @@ def User_login(username, password):
             return True
         sql = "SELECT * FROM python.user WHERE username=%s AND password=%s"
         with db.cursor() as cursor:
-            cursor.execute(sql, (username,password_hash))
+            cursor.execute(sql, (username, password_hash))
             results = cursor.fetchall()
             if len(results) == 0:
                 return False
-            else: 
-                with redis_client.pipeline() as pipe: 
-                    pipe.setex(username ,3600,'authenticated') 
-                    pipe.execute() 
+            else:
+                with redis_client.pipeline() as pipe:
+                    pipe.setex(username, 3600, 'authenticated')
+                    pipe.execute()
                 return True
-    except Exception as e: 
-         logging.error("An error occurred while user login: %s",e) 
-         return 'error' 
-    
-    finally: 
-         close_connections()
-    
+    except Exception as e:
+        logging.error("An error occurred while user login: %s", e)
+        return 'error'
+
+    finally:
+        close_connections()
+
+
 def User_forget(email, password):
     password = hashlib.sha256(password.encode()).hexdigest()
     # 判断用户邮箱是否存在
@@ -108,8 +114,9 @@ def User_forget(email, password):
     finally:
         cursor.close()
 
+
 def User_info(username):
-    sql = """SELECT * FROM python.user WHERE username='%s'""" % (username)
+    sql = """SELECT * FROM python.user WHERE username='%s'""" % username
     # 使用cursor()方法获取操作游标 
     cursor = db.cursor()
     try:
