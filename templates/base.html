@@ -5,7 +5,7 @@
   <title>myvotes-简单的投票系统</title>
   <link href="/static/css/layui.css" rel="stylesheet">
 </head>
-
+<body>
 <ul class="layui-nav">
   <li class="layui-nav-item layui-this"><a href="/">主页</a></li>
   <li class="layui-nav-item">
@@ -20,7 +20,7 @@
       <dl class="layui-nav-child">
         <dd><a href="javascript:;">控制台</a></dd>
         <hr>
-        <dd style="text-align: center;"><a href="">退出</a></dd>
+        <dd style="text-align: center;"><a href="/logout">退出</a></dd>
       </dl>
     {% else %}
     <dl class="layui-nav-child">
@@ -30,3 +30,4 @@
   </li>
 </ul>
 <script src="/static/layui.js"></script>
+</body>

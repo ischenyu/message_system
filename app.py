@@ -1,7 +1,7 @@
 import random
 import time
 
-from flask import Flask, make_response, render_template, request, jsonify, redirect, url_for
+from flask import Flask, make_response, render_template, request, jsonify, redirect, url_for, redirect
 from itsdangerous import URLSafeSerializer
 
 from models import email_captcha
@@ -25,7 +25,6 @@ def index():
     except AttributeError:
         return render_template("index.html")
 
-
 @app.route('/login')
 def login():
     try:
@@ -39,16 +38,27 @@ def login():
     except AttributeError:
         return render_template('login.html')
 
+@app.route('/logout', methods=['GET'])
+def logout():
+    if request.cookies.get('logining') == 'True':
+        # 更新cookie'logining'的值为False.
+        max_age = 604800
+        # 加密用户信息并设置到 Cookie 中
+        resp = make_response(jsonify({"success": True, "message": "退出成功", 'code': 200}))
+        resp.set_cookie('user_email', max_age=max_age)
+        resp.set_cookie('logining', str(False), max_age=max_age)
+        # return resp
+        return redirect('/')
+    else:
+        return redirect('/')
 
 @app.route('/register')
 def register():
     return render_template("register.html")
 
-
 @app.route('/forget')
 def forget():
     return render_template("forget.html")
-
 
 @app.route('/api/user/register', methods=['POST', 'GET'])
 def api():
@@ -84,7 +94,6 @@ def api():
     else:
         return "这是api接口,你给我爬啊", 403
 
-
 @app.route('/api/user/login', methods=['POST', 'GET'])
 def api_login():
     if request.method == 'POST':
@@ -112,10 +121,8 @@ def api_login():
     else:
         return "这是api接口,你给我爬啊", 403
 
-
 # 记录用户最近一次请求验证码的时间
 last_request_time = {}
-
 
 @app.route('/api/user/register/captcha', methods=['POST', 'GET'])
 def captcha():
@@ -143,7 +150,6 @@ def captcha():
     else:
         return 'Forbidden', 400
 
-
 @app.route('/api/user/forget', methods=['POST', 'GET'])
 def api_forget():
     if request.method == 'POST':
@@ -166,6 +172,9 @@ def api_forget():
         else:
             return jsonify({"success": True, 'message': '密码修改成功'})
 
+@app.route('/create')
+def create():
+    return render_template('create.html')
 
 if __name__ == "__main__":
     # 933d9673cc
