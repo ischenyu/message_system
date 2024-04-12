@@ -6,8 +6,26 @@
   <link href="/static/css/layui.css" rel="stylesheet">
 </head>
 <style>
-.demo-login-container{width: 640px; margin: 42px auto 0;}
-.layui-form-item-send{width: 640px; margin: 42px auto 0;}
+    @media screen and (min-width: 768px) {
+        .demo-login-container {
+            width: 640px;
+            margin: 42px auto 0;
+        }
+
+        .layui-form-item-send {
+            width: 640px;
+            margin: 42px auto 0;
+        }
+    }
+    /* 移动端样式 */
+    @media screen and (max-width: 767px) {
+        .demo-login-container {
+            width: 100%; /* 在移动端占满全屏 */
+        }
+        .layui-form-item-send {
+            width: 100%; /* 在移动端占满全屏 */
+        }
+}
 </style>
 <body>
 <ul class="layui-nav">
