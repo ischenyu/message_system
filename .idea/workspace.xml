@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62a86e1b-9381-43b7-8e8f-763df5d9c61a" name="Changes" comment="修改" />
+    <list default="true" id="62a86e1b-9381-43b7-8e8f-763df5d9c61a" name="Changes" comment="修改">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/mysqldb.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/mysqldb.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -177,7 +181,7 @@
       <workItem from="1711247944470" duration="8879000" />
       <workItem from="1711768105587" duration="3564000" />
       <workItem from="1712913093941" duration="462000" />
-      <workItem from="1712913774894" duration="5930000" />
+      <workItem from="1712913774894" duration="7190000" />
     </task>
     <task id="LOCAL-00001" summary="重构代码，修复不合理和错误">
       <option name="closed" value="true" />
@@ -243,7 +247,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712920223191</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="修改">
+      <option name="closed" value="true" />
+      <created>1712920255574</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1712920255574</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

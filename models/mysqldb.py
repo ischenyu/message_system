@@ -12,7 +12,7 @@ db = pymysql.connect(host='192.168.1.2',
 timestamp = lambda: int(time.time())
 
 # 初始化 Redis 连接和连接池
-redis_pool = redis.ConnectionPool(host='192.168.1.5', port=6379, db=10, password='Dingtalk1234561017')
+redis_pool = redis.ConnectionPool(host='192.168.1.2', port=6379, db=10, password='Dingtalk1234561017')
 redis_client = redis.Redis(connection_pool=redis_pool)
 # 初始化日志记录器
 logging.basicConfig(level=logging.ERROR)  # 设置日志级别为 ERROR 或更高级别
