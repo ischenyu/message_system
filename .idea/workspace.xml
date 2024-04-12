@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62a86e1b-9381-43b7-8e8f-763df5d9c61a" name="Changes" comment="添加Google recaptcha，添加创建留言页面">
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+    <list default="true" id="62a86e1b-9381-43b7-8e8f-763df5d9c61a" name="Changes" comment="修改程序监听IP">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/.gitattributes" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/test.html" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +180,7 @@
       <workItem from="1711247944470" duration="8879000" />
       <workItem from="1711768105587" duration="3564000" />
       <workItem from="1712913093941" duration="462000" />
-      <workItem from="1712913774894" duration="5779000" />
+      <workItem from="1712913774894" duration="5894000" />
     </task>
     <task id="LOCAL-00001" summary="重构代码，修复不合理和错误">
       <option name="closed" value="true" />
@@ -229,7 +230,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712919864093</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="修改程序监听IP">
+      <option name="closed" value="true" />
+      <created>1712920121733</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1712920121733</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -264,7 +273,8 @@
     <MESSAGE value="添加编辑器配置" />
     <MESSAGE value="修改错误" />
     <MESSAGE value="添加Google recaptcha，添加创建留言页面" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加Google recaptcha，添加创建留言页面" />
+    <MESSAGE value="修改程序监听IP" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改程序监听IP" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/web$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1710046171181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
