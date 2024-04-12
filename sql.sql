@@ -1,5 +1,5 @@
 -- --------------------------------------------------------
--- 主机:                           192.168.1.15
+-- 主机:                           192.168.1.2
 -- 服务器版本:                        8.2.0 - MySQL Community Server - GPL
 -- 服务器操作系统:                      Linux
 -- HeidiSQL 版本:                  12.6.0.6765
@@ -23,27 +23,25 @@ USE `python`;
 CREATE TABLE IF NOT EXISTS `user` (
   `username` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '用户名',
   `userid` int DEFAULT NULL,
-  `password` text COLLATE utf8mb4_general_ci NOT NULL COMMENT '哈希密码',
+  `password` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '哈希密码',
   `email` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '邮箱',
   `init_time` int NOT NULL COMMENT '用户注册时间-时间戳'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='存放用户信息';
 
--- 正在导出表  python.user 的数据：~0 rows (大约)
+-- 正在导出表  python.user 的数据：~2 rows (大约)
 REPLACE INTO `user` (`username`, `userid`, `password`, `email`, `init_time`) VALUES
-	('Paimon', 1, '1e0e61ce9c025449ba68208e1cbda565a7300d3a02db6b5b79fe88578b38d774', 'abb1234aabb@gmail.com', 1707994288);
+	('Paimon', 1, '1e0e61ce9c025449ba68208e1cbda565a7300d3a02db6b5b79fe88578b38d774', 'abb1234aabb@gmail.com', 1707994288),
+	('test', NULL, 'b0ab628c9e14621846c58b4eb35060ef3885253a457d2d76136716d4850bad45', '3469134108@qq.com', 1709022152);
 
--- 导出  表 python.votes 结构
-CREATE TABLE IF NOT EXISTS `votes` (
-  `vote_id` int NOT NULL COMMENT '投票项目ID',
-  `title` text COLLATE utf8mb4_general_ci NOT NULL COMMENT '投票标题',
-  `neirong` text COLLATE utf8mb4_general_ci NOT NULL COMMENT '投票内容描述',
-  `chooses` json NOT NULL COMMENT '投票选项',
-  `text` text COLLATE utf8mb4_general_ci COMMENT '注释 可选',
-  `start_time` int NOT NULL COMMENT '开始时间',
-  `end_time` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='投票数据表';
+-- 导出  表 python.word 结构
+CREATE TABLE IF NOT EXISTS `word` (
+  `time` int DEFAULT NULL,
+  `ip` text COLLATE utf8mb4_general_ci,
+  `broswer` text COLLATE utf8mb4_general_ci,
+  `message` text COLLATE utf8mb4_general_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 正在导出表  python.votes 的数据：~0 rows (大约)
+-- 正在导出表  python.word 的数据：~0 rows (大约)
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

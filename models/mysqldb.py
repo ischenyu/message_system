@@ -1,7 +1,3 @@
-'''
-editor:ischenyu.
-'''
-
 import hashlib
 import logging
 import pymysql
@@ -9,7 +5,7 @@ import redis
 import time
 
 # 打开数据库连接
-db = pymysql.connect(host='192.168.1.5',
+db = pymysql.connect(host='192.168.1.2',
                      user='root',
                      password='Dingtalk1234561017',
                      database='python')
@@ -31,7 +27,7 @@ def close_connections():
         logging.error("An error occurred while closing connections: %s", e)
 
 
-def User_signup(username, password, email):
+def user_signup(username, password, email):
     init_time = int(time.time())
     password_hash = hashlib.sha256(password.encode()).hexdigest()
     cursor = db.cursor()
@@ -56,7 +52,7 @@ def User_signup(username, password, email):
         cursor.close()
 
 
-def User_login(username, password):
+def user_login(username, password):
     try:
         password_hash = hashlib.sha256(password.encode()).hexdigest()
         cached_user = redis_client.get(username)
@@ -81,7 +77,7 @@ def User_login(username, password):
         close_connections()
 
 
-def User_forget(email, password):
+def user_forget(email, password):
     password = hashlib.sha256(password.encode()).hexdigest()
     # 判断用户邮箱是否存在
     sql_user_init = """SELECT * FROM python.user WHERE email='%s'""" % (email)
@@ -115,7 +111,7 @@ def User_forget(email, password):
         cursor.close()
 
 
-def User_info(username):
+def user_info(username):
     sql = """SELECT * FROM python.user WHERE username='%s'""" % username
     # 使用cursor()方法获取操作游标 
     cursor = db.cursor()

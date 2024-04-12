@@ -1,8 +1,12 @@
 import random
 import time
 
-from flask import Flask, make_response, render_template, request, jsonify, redirect, url_for, redirect
+from flask import Flask, make_response, render_template, request, jsonify, url_for, redirect
 from itsdangerous import URLSafeSerializer
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired
+from flask_wtf.recaptcha import RecaptchaField
 
 from models import email_captcha
 from models import mysqldb
@@ -11,7 +15,9 @@ app = Flask(__name__, static_folder='static')
 app.secret_key = 'cookie_key'  # 设置一个用于签名的秘钥
 # 创建一个序列化器对象
 serializer = URLSafeSerializer(app.secret_key)
-
+app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld5smgmAAAAAHcQIxntBsbfm9N6d_EPCnyqtMfH'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld5smgmAAAAACCveB-L31-dGO7FOFRzb_pQ6n2c'
 
 @app.route("/")
 def index():
@@ -25,6 +31,7 @@ def index():
     except AttributeError:
         return render_template("index.html")
 
+
 @app.route('/login')
 def login():
     try:
@@ -37,6 +44,7 @@ def login():
             return render_template('login.html')
     except AttributeError:
         return render_template('login.html')
+
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -52,13 +60,16 @@ def logout():
     else:
         return redirect('/')
 
+
 @app.route('/register')
 def register():
     return render_template("register.html")
 
+
 @app.route('/forget')
 def forget():
     return render_template("forget.html")
+
 
 @app.route('/api/user/register', methods=['POST', 'GET'])
 def api():
@@ -74,9 +85,9 @@ def api():
         if data['agreement'] == 'on':
             try:
                 if email_captcha.verify_code(email, input_code):
-                    if mysqldb.User_signup(username, password, email):
+                    if mysqldb.user_signup(username, password, email):
                         return jsonify({"code": 200, "success": True, "message": "注册成功"})
-                    elif mysqldb.User_signup(username, password, email) == 114:
+                    elif mysqldb.user_signup(username, password, email) == 114:
                         return jsonify({"code": 402, "success": False, "message": "注册失败,用户已存在"})
                     else:
                         return jsonify(
@@ -94,6 +105,7 @@ def api():
     else:
         return "这是api接口,你给我爬啊", 403
 
+
 @app.route('/api/user/login', methods=['POST', 'GET'])
 def api_login():
     if request.method == 'POST':
@@ -103,7 +115,7 @@ def api_login():
             username = data['username']
             email = data['username']
             password = data['password']
-            if mysqldb.User_login(username, password):
+            if mysqldb.user_login(username, password):
                 # 用户信息写入数据库，注册成功后写入cookie，重定向到主页.
                 max_age = 604800
                 # 加密用户信息并设置到 Cookie 中
@@ -112,7 +124,7 @@ def api_login():
                 resp.set_cookie('user_email', encrypted_email, max_age=max_age)
                 resp.set_cookie('logining', str(True), max_age=max_age)
                 return resp
-            elif mysqldb.User_login(username, password) == 'error':
+            elif mysqldb.user_login(username, password) == 'error':
                 return jsonify({"message": "服务器内部错误"}), 500
             else:
                 return jsonify({"code": 401, "message": "用户名或密码错误"}), 401
@@ -121,8 +133,10 @@ def api_login():
     else:
         return "这是api接口,你给我爬啊", 403
 
+
 # 记录用户最近一次请求验证码的时间
 last_request_time = {}
+
 
 @app.route('/api/user/register/captcha', methods=['POST', 'GET'])
 def captcha():
@@ -150,6 +164,7 @@ def captcha():
     else:
         return 'Forbidden', 400
 
+
 @app.route('/api/user/forget', methods=['POST', 'GET'])
 def api_forget():
     if request.method == 'POST':
@@ -159,9 +174,9 @@ def api_forget():
         password = data.get('password')
         confirmPassword = data.get('confirmPassword')
         if email and input_code and password and confirmPassword:
-            if email_captcha.verify_code(email, input_code) == True:
+            if email_captcha.verify_code(email, input_code):
                 if password == confirmPassword:
-                    if mysqldb.User_forget(email, password) == True:
+                    if mysqldb.user_forget(email, password):
                         return jsonify({"success": True, 'message': '密码修改成功'})
                     else:
                         return jsonify({"success": False, 'message': '密码修改失败'})
@@ -172,9 +187,25 @@ def api_forget():
         else:
             return jsonify({"success": True, 'message': '密码修改成功'})
 
+class MyForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    recaptcha = RecaptchaField()  # 设置 reCAPTCHA 的语言为简体中文
+
 @app.route('/create')
 def create():
-    return render_template('create.html')
+    form = MyForm()
+    if form.validate_on_submit():
+        return 'Form submitted successfully!'
+    return render_template('create.html', form=form)
+
+@app.route('/api/create', methods=['POST', 'GET'])
+def user_create():
+    if request.method == 'POST':
+        data = request.get_json()
+        return jsonify({"success": True, 'code':200})
+    else:
+        return '403',403
+
 
 if __name__ == "__main__":
     # 933d9673cc

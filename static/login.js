@@ -26,7 +26,6 @@ layui.use(function(){
                 }
             },
             error: function(xhr, status, error) {
-                console.log("Error:", error);
                 layer.msg('请求失败，请重试', {icon: 5});
             }
         });

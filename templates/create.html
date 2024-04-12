@@ -1,102 +1,96 @@
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>myvotes-创建投票</title>
+  <title>毕业生留言</title>
   <link href="/static/css/layui.css" rel="stylesheet">
 </head>
-
+<style>
+.demo-login-container{width: 640px; margin: 42px auto 0;}
+.layui-form-item-send{width: 640px; margin: 42px auto 0;}
+</style>
 <body>
-<form class="layui-form" action="" lay-filter="demo-val-filter">
-  <div class="layui-form-item">
-    <label class="layui-form-label">标题</label>
-    <div class="layui-input-block">
-      <input type="text" name="username" lay-verify="title" autocomplete="off" placeholder="请输入" class="layui-input">
-    </div>
-  </div>
-  <div class="layui-form-item">
-    <label class="layui-form-label">选择框</label>
-    <div class="layui-input-block">
-      <select name="interest" lay-filter="hobby">
-        <option value=""></option>
-        <option value="0">写作</option>
-        <option value="1">阅读</option>
-        <option value="2">游戏</option>
-        <option value="3">音乐</option>
-        <option value="4">旅行</option>
-      </select>
-    </div>
-  </div>
-  <div class="layui-form-item">
-    <div class="layui-input-block">
-      <input type="checkbox" name="getoff" title="投票自动到期" id="getoff" checked>
-    </div>
-  </div>
-  <div class="layui-form-item" id="date_choose" name="date_choose">
-    <div class="layui-inline" id="date_choose">
-      <label class="layui-form-label">日期范围</label>
-      <div class="layui-inline" id="ID-laydate-rangeLinked">
-        <div class="layui-input-inline">
-          <input type="text" autocomplete="off" id="ID-laydate-start-date-1" class="layui-input" placeholder="开始日期">
+<ul class="layui-nav">
+  <li class="layui-nav-item"><a href="/">主页</a></li>
+  <li class="layui-nav-item layui-this">
+    <a href="/create">创建留言</a>
+  </li>
+  <li class="layui-nav-item">
+    <a href="/login">登录</a>
+  </li>
+  <li class="layui-nav-item"><a href="/register">注册</a></li>
+  <li class="layui-nav-item" lay-unselect>
+    <a href="javascript:;">
+      <img src="https://unpkg.com/outeres@0.0.10/demo/avatar/1.jpg" class="layui-nav-img">
+    </a>
+    {% if logined %}
+      <dl class="layui-nav-child">
+        <dd><a href="javascript:;">控制台</a></dd>
+        <hr>
+        <dd style="text-align: center;"><a href="/logout">退出</a></dd>
+      </dl>
+    {% else %}
+    <dl class="layui-nav-child">
+      <dd><a href="/login">未登录</a></dd>
+    </dl>
+    {% endif %}
+  </li>
+</ul>
+
+<form class="layui-form">
+    <div class="demo-login-container">
+    <div class="layui-form-item">
+      <div class="layui-input-wrap">
+        <div class="layui-input-prefix">
+          <i class="layui-icon layui-icon-username"></i>
         </div>
-        <div class="layui-form-mid">-</div>
-        <div class="layui-input-inline">
-          <input type="text" autocomplete="off" id="ID-laydate-end-date-1" class="layui-input" placeholder="结束日期">
-        </div>
+        <input type="text" name="username" value="" lay-verify="required" placeholder="你的名字(填“#”代表匿名" lay-reqtext="请填写名字" autocomplete="off" class="layui-input" lay-affix="clear">
       </div>
     </div>
-  </div>
-  <div class="layui-form-item layui-form-text">
-    <label class="layui-form-label">文本域</label>
-    <div class="layui-input-block">
-      <textarea placeholder="请输入" class="layui-textarea" name="desc"></textarea>
+        <div class="layui-form-item">
+        <label class="layui-form-label">年级：</label>
+        <div class="layui-input-inline">
+            <select id="gradeSelect" lay-filter="grade">
+                <option value="">请选择年级</option>
+                <option value="8">八年级</option>
+                <option value="9">九年级</option>
+            </select>
+        </div>
     </div>
-  </div>
-  <div class="layui-form-item">
-    <div class="layui-input-block">
-      <button type="submit" class="layui-btn" lay-submit lay-filter="demo-val">立即提交</button>
-      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-    </div>
-  </div>
-</form>
 
+    <div class="layui-form-item">
+        <label class="layui-form-label">班级：</label>
+        <div class="layui-input-inline">
+            <select id="classSelect" lay-filter="class">
+                <option value="">请选择班级</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-wrap">
+        <div class="layui-input-prefix">
+          <i class="layui-icon layui-icon-password"></i>
+        </div>
+          <textarea name="" placeholder="写下你想说的话" class="layui-textarea"></textarea>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-row">
+        <div class="layui-col-xs7">
+          <div class="layui-input-wrap">
+          </div>
+        </div>
+      </div>
+        {{ form.hidden_tag() }}
+        {{ form.recaptcha }}  <!-- 渲染 reCAPTCHA -->
+    </div>
+    <div class="layui-form-item-send" id="send">
+      <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-login">提交</button>
+    </div>
+  </div>
+
+</form>
 <script src="/static/layui.js"></script>
 <script src="/static/jquery.js"></script>
-<script>
-  layui.use(function(){
-  var $ = layui.$;
-  var form = layui.form;
-  var laydate = layui.laydate;
-  laydate.render({
-    elem: '#ID-laydate-rangeLinked',
-    range: ['#ID-laydate-start-date-1', '#ID-laydate-end-date-1'],
-    rangeLinked: true
-  });
-  // 提交事件
-  form.on('submit(demo-val)', function(data){
-    var field = data.field; // 获取表单字段值
-    // 显示填写结果，仅作演示用
-    layer.alert(JSON.stringify(field), {
-      title: '当前填写的字段值'
-    });
-    // 此处可执行 Ajax 等操作
-    return false; // 阻止默认 form 跳转
-  });
-  form.on('checkbox', function(data){
-    if (data.elem.id === 'getoff') {
-      var isChecked = data.elem.checked;
-      var dateChooseDiv = $('#date_choose');
-
-      if (isChecked) {
-        // 选中时显示元素
-        dateChooseDiv.show();
-      } else {
-        // 取消选中时隐藏元素
-        dateChooseDiv.hide();
-      }
-    }
-  });
-
-  form.render();
-})
-</script>
+<script src="/static/create.js"></script>
 </body>
