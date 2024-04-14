@@ -3,10 +3,6 @@ import time
 
 from flask import Flask, make_response, render_template, request, jsonify, url_for, redirect
 from itsdangerous import URLSafeSerializer
-from flask_wtf import FlaskForm
-from wtforms import StringField
-from wtforms.validators import DataRequired
-from flask_wtf.recaptcha import RecaptchaField
 
 from models import email_captcha
 from models import mysqldb
@@ -18,6 +14,7 @@ serializer = URLSafeSerializer(app.secret_key)
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld5smgmAAAAAHcQIxntBsbfm9N6d_EPCnyqtMfH'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld5smgmAAAAACCveB-L31-dGO7FOFRzb_pQ6n2c'
+
 
 @app.route("/")
 def index():
@@ -187,25 +184,30 @@ def api_forget():
         else:
             return jsonify({"success": True, 'message': '密码修改成功'})
 
-class MyForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
-    recaptcha = RecaptchaField()  # 设置 reCAPTCHA 的语言为简体中文
 
 @app.route('/create')
 def create():
-    form = MyForm()
-    if form.validate_on_submit():
-        return 'Form submitted successfully!'
-    return render_template('create.html', form=form)
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    return render_template('create.html', ip=ip)
+
 
 @app.route('/api/create', methods=['POST', 'GET'])
 def user_create():
     if request.method == 'POST':
-        data = request.get_json()
-        # Todo: 更新recaptcha
-        return jsonify({"success": True, 'code':200})
+        data_message = request.get_json()
+        print(data_message)
+        username = data_message['username']
+        grade = data_message['grade']
+        grade_class = data_message['class']
+        message = data_message['message']
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        broswer = request.headers.get('User-Agent')
+        if mysqldb.add_message(username, ip, broswer, message, grade, grade_class):
+            return jsonify({"success": True, 'code': 200})
+        else:
+            return jsonify({"success": False, 'code': 500})
     else:
-        return '403',403
+        return '403', 403
 
 
 if __name__ == "__main__":

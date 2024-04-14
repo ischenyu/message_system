@@ -15,7 +15,7 @@ timestamp = lambda: int(time.time())
 redis_pool = redis.ConnectionPool(host='192.168.1.2', port=6379, db=10, password='Dingtalk1234561017')
 redis_client = redis.Redis(connection_pool=redis_pool)
 # 初始化日志记录器
-logging.basicConfig(level=logging.ERROR)  # 设置日志级别为 ERROR 或更高级别
+# logging.basicConfig(level=logging.ERROR)  # 设置日志级别为 ERROR 或更高级别
 
 
 def close_connections():
@@ -126,3 +126,25 @@ def user_info(username):
             return results[0]
     except:
         return 'error'
+
+def add_message(username, ip, broswer, message, grade, grade_class):
+    init_time = time.time()
+    # grade = int(grade)
+    # grade_class = int(grade_class)
+    # 使用cursor()方法获取操作游标
+    cursor = db.cursor()
+    try:
+        sql = "INSERT INTO python.word(username, init_time, ip, broswer, message, grade, grade_class) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        # 执行插入操作，使用参数化查询以防止 SQL 注入攻击
+        cursor.execute(sql, (username, init_time, ip, broswer, message, grade, grade_class))
+        # 提交事务并关闭游标
+        db.commit()
+        return True
+    except Exception as e:
+        logging.error("An error occurred during user signup: %s", e)
+        print(e)
+        # 回滚事务并关闭游标
+        db.rollback()
+        return False
+    finally:
+        cursor.close()
