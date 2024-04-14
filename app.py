@@ -1,6 +1,8 @@
 import random
 import time
 
+from functools import wraps
+from collections import defaultdict
 from flask import Flask, make_response, render_template, request, jsonify, url_for, redirect
 from itsdangerous import URLSafeSerializer
 
@@ -14,7 +16,6 @@ serializer = URLSafeSerializer(app.secret_key)
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld5smgmAAAAAHcQIxntBsbfm9N6d_EPCnyqtMfH'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld5smgmAAAAACCveB-L31-dGO7FOFRzb_pQ6n2c'
-
 
 @app.route("/")
 def index():
@@ -191,7 +192,29 @@ def create():
     return render_template('create.html', ip=ip)
 
 
+# 用于存储每个IP地址的请求时间戳
+request_history = defaultdict(list)
+REQUEST_LIMIT = 5  # 每分钟允许的请求数
+TIME_WINDOW = 60  # 时间窗口为60秒
+
+def rate_limit_exceeded(ip):
+    current_time = time.time()
+    # 移除时间窗口之外的请求时间戳
+    request_history[ip] = [t for t in request_history[ip] if t > current_time - TIME_WINDOW]
+    return len(request_history[ip]) > REQUEST_LIMIT
+
+def rate_limited(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        if rate_limit_exceeded(ip):
+            return jsonify({'error': 'Rate limit exceeded. Try again later.', 'code':429})
+        request_history[ip].append(time.time())
+        return func(*args, **kwargs)
+    return decorated_function
+
 @app.route('/api/create', methods=['POST', 'GET'])
+@rate_limited
 def user_create():
     if request.method == 'POST':
         data_message = request.get_json()

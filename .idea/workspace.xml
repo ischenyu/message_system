@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62a86e1b-9381-43b7-8e8f-763df5d9c61a" name="Changes" comment="修改页面样式">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="62a86e1b-9381-43b7-8e8f-763df5d9c61a" name="Changes" comment="修改页面样式，更新提交留言、记录IP功能">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/mysqldb.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/mysqldb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/create.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/create.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/create.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +196,7 @@
       <workItem from="1712913093941" duration="462000" />
       <workItem from="1712913774894" duration="8221000" />
       <workItem from="1713063543991" duration="1295000" />
-      <workItem from="1713070278244" duration="5682000" />
+      <workItem from="1713070278244" duration="10147000" />
     </task>
     <task id="LOCAL-00001" summary="重构代码，修复不合理和错误">
       <option name="closed" value="true" />
@@ -288,7 +286,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712922189190</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="修改页面样式，更新提交留言、记录IP功能">
+      <option name="closed" value="true" />
+      <created>1713076070386</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1713076070386</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -326,7 +332,8 @@
     <MESSAGE value="修改程序监听IP" />
     <MESSAGE value="修改" />
     <MESSAGE value="修改页面样式" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改页面样式" />
+    <MESSAGE value="修改页面样式，更新提交留言、记录IP功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改页面样式，更新提交留言、记录IP功能" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/web$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1710046171181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
