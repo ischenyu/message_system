@@ -9,7 +9,7 @@ layui.use(function(){
     
         // 使用jQuery的Ajax方式提交表单数据
         $.ajax({
-            url: '/api/user/login',
+            url: '/login',
             type: 'POST',
             dataType: "json",
             contentType: "application/json",

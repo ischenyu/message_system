@@ -74,8 +74,8 @@
     </div>
         <div class="layui-form-item">
         <label class="layui-form-label">年级：</label>
-        <div class="layui-input-inline">
-            <select id="gradeSelect" lay-filter="grade">
+        <div class="layui-input-inline" lay-reqtext="请选择年级">
+            <select id="gradeSelect" lay-filter="grade" lay-reqtext="请选择年级">
                 <option value="">请选择年级</option>
                 <option value="8">八年级</option>
                 <option value="9">九年级</option>
@@ -85,8 +85,8 @@
 
     <div class="layui-form-item">
         <label class="layui-form-label">班级：</label>
-        <div class="layui-input-inline">
-            <select id="classSelect" lay-filter="class">
+        <div class="layui-input-inline" lay-reqtext="请选择班级">
+            <select id="classSelect" lay-filter="class" lay-reqtext="请选择班级">
                 <option value="">请选择班级</option>
             </select>
         </div>
@@ -96,7 +96,7 @@
         <div class="layui-input-prefix">
           <i class="layui-icon layui-icon-password"></i>
         </div>
-          <textarea name="" placeholder="写下你想说的话" class="layui-textarea"></textarea>
+          <textarea name="" placeholder="写下你想说的话" class="layui-textarea" lay-reqtext="请输入内容"></textarea>
       </div>
     </div>
     <div class="layui-form-item">
@@ -116,7 +116,7 @@
 
 <div class="layui-footer">
     <!-- 底部固定区域 -->
-    留言系统开源地址：<div href="https://github.cim/ischenyu/message_system/">`<i class="layui-icon layui-icon-github" style="font-size: 30px; color: #1E9FFF;"></i></div>
+    留言系统开源地址：<div href="https://github.cim/ischenyu/message_system/">`<i class="layui-icon layui-icon-github" style="font-size: 30px; color: #000000FF;"></i></div>
 </div>
 <script src="/static/layui.js"></script>
 <script src="/static/jquery.js"></script>

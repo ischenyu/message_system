@@ -31,7 +31,7 @@ layui.use(function(){
       });
 
       $.ajax({
-        url: '/api/user/register',
+        url: '/register',
         type: 'POST',
         dataType: "json",
         contentType: "application/json",
@@ -67,7 +67,7 @@ layui.use(function(){
           // layer.msg('邮箱规则验证通过');
           // 此处可继续书写「发送验证码」等后续逻辑
           $.ajax({
-            url: '/api/user/register/captcha',
+            url: '/register/captcha',
             type: 'POST',
             dataType:"json",
             contentType:"application/json",

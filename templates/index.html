@@ -32,5 +32,31 @@
     {% endif %}
   </li>
 </ul>
+
+
+<table id="messageTable" lay-filter="messageTable">
+        <!-- 表头 -->
+        <thead>
+            <tr>
+                <th lay-data="{field:'id', width:80}">ID</th>
+                <th lay-data="{field:'username'}">用户名</th>
+                <th lay-data="{field:'ip'}">IP地址</th>
+                <th lay-data="{field:'message'}">消息内容</th>
+                <th lay-data="{field:'grade', width:80}">等级</th>
+                <th lay-data="{field:'class', width:80}">班级</th>
+                <th lay-data="{fixed: 'right', toolbar: '#operate'}">操作</th>
+            </tr>
+        </thead>
+        <!-- 表格主体 -->
+        <tbody></tbody>
+    </table>
+
 <script src="/static/layui.js"></script>
+<script src="/static/index.js"></script>
 </body>
+
+<!-- 定义操作栏模板 -->
+<script type="text/html" id="operate">
+    <button class="layui-btn layui-btn-sm" lay-event="like">点赞</button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="report">举报</button>
+</script>

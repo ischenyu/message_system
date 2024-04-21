@@ -28,7 +28,7 @@ layui.use(function(){
       });
 
       $.ajax({
-        url: '/api/user/register',
+        url: '/register',
         type: 'POST',
         dataType: "json",
         contentType: "application/json",
@@ -39,7 +39,10 @@ layui.use(function(){
               window.location.replace("/home");
           } else if(res.code === 402) {
               layer.msg('用户已存在', {icon: 6});
-          } else {
+          } else if(res.code === 1402) {
+              layer.msg('用户不存在', {icon: 6});
+          }
+            else {
               layer.msg('注册失败', {icon: 5});
           }
         },

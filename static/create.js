@@ -36,7 +36,7 @@ layui.use(['form', 'jquery'], function(){
 
         $.ajax({
             type: 'POST',
-            url: '/api/create', // 替换为你的后端 API 地址
+            url: '/create',
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function(response) {

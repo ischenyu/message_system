@@ -14,8 +14,7 @@ app.secret_key = 'cookie_key'  # 设置一个用于签名的秘钥
 # 创建一个序列化器对象
 serializer = URLSafeSerializer(app.secret_key)
 app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['RECAPTCHA_PUBLIC_KEY'] = '6Ld5smgmAAAAAHcQIxntBsbfm9N6d_EPCnyqtMfH'
-app.config['RECAPTCHA_PRIVATE_KEY'] = '6Ld5smgmAAAAACCveB-L31-dGO7FOFRzb_pQ6n2c'
+
 
 @app.route("/")
 def index():
@@ -25,23 +24,20 @@ def index():
         if logining == 'True':
             return render_template("index.html", logined=True, email=user_email)
         else:
-            return render_template("index.html")
+            return render_template("index.html", logined=False)
     except AttributeError:
         return render_template("index.html")
 
 
-@app.route('/login')
-def login():
-    try:
-        # 从请求的 cookie 中获取名为 'user_email' 的值
-        logining = request.cookies.get('logining')
-        if logining == 'True':
-            # 执行重定向
-            return redirect(url_for('index'))
-        else:
-            return render_template('login.html')
-    except AttributeError:
-        return render_template('login.html')
+@app.route("/messages", methods=['GET'])
+def get_messages():
+    messages = mysqldb.get_message()
+    return jsonify({
+        "code": 0,
+        "msg": "获取消息成功",
+        "data": messages
+    })
+
 
 
 @app.route('/logout', methods=['GET'])
@@ -59,17 +55,8 @@ def logout():
         return redirect('/')
 
 
-@app.route('/register')
-def register():
-    return render_template("register.html")
 
-
-@app.route('/forget')
-def forget():
-    return render_template("forget.html")
-
-
-@app.route('/api/user/register', methods=['POST', 'GET'])
+@app.route('/register', methods=['POST', 'GET'])
 def api():
     if request.method == 'POST':
         # 获取传回的数据
@@ -100,11 +87,11 @@ def api():
                 return jsonify({"success": False, "message": "验证码错误Exception"})
         else:
             return jsonify({"success": False, "message": "请同意协议"}), 400
-    else:
-        return "这是api接口,你给我爬啊", 403
+    elif request.method == 'GET':
+        return render_template("register.html")
 
 
-@app.route('/api/user/login', methods=['POST', 'GET'])
+@app.route('/login', methods=['POST', 'GET'])
 def api_login():
     if request.method == 'POST':
         try:
@@ -128,22 +115,31 @@ def api_login():
                 return jsonify({"code": 401, "message": "用户名或密码错误"}), 401
         except KeyError:
             return jsonify({"code": 400, "message": "回调数据不完整！"}), 400
-    else:
-        return "这是api接口,你给我爬啊", 403
+    elif request.method == 'GET':
+        try:
+            # 从请求的 cookie 中获取名为 'user_email' 的值
+            logining = request.cookies.get('logining')
+            if logining == 'True':
+                # 执行重定向
+                return redirect(url_for('index'))
+            else:
+                return render_template('login.html')
+        except AttributeError:
+            return render_template('login.html')
 
 
 # 记录用户最近一次请求验证码的时间
 last_request_time = {}
 
 
-@app.route('/api/user/register/captcha', methods=['POST', 'GET'])
+@app.route('/register/captcha', methods=['POST', 'GET'])
 def captcha():
     if request.method == 'POST':
         data = request.get_json()
         email = data.get('email')
         print(email)
         if not email:
-            return jsonify({"success": False, 'message': 'Email is required'}), 400
+            return jsonify({"success": False, 'message': 'Email is required', 'code':400})
 
         # 检查是否已经记录了用户的最近一次请求时间
         if email in last_request_time:
@@ -163,7 +159,7 @@ def captcha():
         return 'Forbidden', 400
 
 
-@app.route('/api/user/forget', methods=['POST', 'GET'])
+@app.route('/forget', methods=['POST', 'GET'])
 def api_forget():
     if request.method == 'POST':
         data = request.get_json()
@@ -176,26 +172,25 @@ def api_forget():
                 if password == confirmPassword:
                     if mysqldb.user_forget(email, password):
                         return jsonify({"success": True, 'message': '密码修改成功'})
-                    else:
-                        return jsonify({"success": False, 'message': '密码修改失败'})
+                    elif mysqldb.user_forget(email, password) == 'user_not_exist':
+                        return jsonify({"success": False, 'message': '用户不存在', 'code': 1404})
                 else:
                     return jsonify({"success": False, 'message': '两次密码不一致'})
             else:
                 return jsonify({"success": False, 'message': '验证码错误'})
         else:
             return jsonify({"success": True, 'message': '密码修改成功'})
+    elif request.method == 'GET':
+        return render_template('forget.html')
 
 
-@app.route('/create')
-def create():
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    return render_template('create.html', ip=ip)
 
 
 # 用于存储每个IP地址的请求时间戳
 request_history = defaultdict(list)
-REQUEST_LIMIT = 5  # 每分钟允许的请求数
+REQUEST_LIMIT = 1  # 每分钟允许的请求数
 TIME_WINDOW = 60  # 时间窗口为60秒
+
 
 def rate_limit_exceeded(ip):
     current_time = time.time()
@@ -203,17 +198,20 @@ def rate_limit_exceeded(ip):
     request_history[ip] = [t for t in request_history[ip] if t > current_time - TIME_WINDOW]
     return len(request_history[ip]) > REQUEST_LIMIT
 
+
 def rate_limited(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         ip = request.headers.get('X-Forwarded-For', request.remote_addr)
         if rate_limit_exceeded(ip):
-            return jsonify({'error': 'Rate limit exceeded. Try again later.', 'code':429})
+            return jsonify({'error': 'Rate limit exceeded. Try again later.', 'code': 429})
         request_history[ip].append(time.time())
         return func(*args, **kwargs)
+
     return decorated_function
 
-@app.route('/api/create', methods=['POST', 'GET'])
+
+@app.route('/create', methods=['POST', 'GET'])
 @rate_limited
 def user_create():
     if request.method == 'POST':
@@ -229,10 +227,10 @@ def user_create():
             return jsonify({"success": True, 'code': 200})
         else:
             return jsonify({"success": False, 'code': 500})
-    else:
-        return '403', 403
+    elif request.method == 'GET':
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        return render_template('create.html', ip=ip)
 
 
 if __name__ == "__main__":
-    # 933d9673cc
     app.run(host='0.0.0.0', debug=True)

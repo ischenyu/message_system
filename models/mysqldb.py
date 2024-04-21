@@ -14,6 +14,8 @@ timestamp = lambda: int(time.time())
 # 初始化 Redis 连接和连接池
 redis_pool = redis.ConnectionPool(host='192.168.1.2', port=6379, db=10, password='Dingtalk1234561017')
 redis_client = redis.Redis(connection_pool=redis_pool)
+
+
 # 初始化日志记录器
 # logging.basicConfig(level=logging.ERROR)  # 设置日志级别为 ERROR 或更高级别
 
@@ -80,7 +82,7 @@ def user_login(username, password):
 def user_forget(email, password):
     password = hashlib.sha256(password.encode()).hexdigest()
     # 判断用户邮箱是否存在
-    sql_user_init = """SELECT * FROM python.user WHERE email='%s'""" % (email)
+    sql_user_init = """SELECT * FROM python.user WHERE email='%s'""" % email
     cursor = db.cursor()
     try:
         cursor.execute(sql_user_init)
@@ -111,32 +113,41 @@ def user_forget(email, password):
         cursor.close()
 
 
-def user_info(username):
-    sql = """SELECT * FROM python.user WHERE username='%s'""" % username
-    # 使用cursor()方法获取操作游标 
+def get_message():
     cursor = db.cursor()
     try:
-        # 执行sql语句
-        cursor.execute(sql)
-        # 获取所有记录列表
-        results = cursor.fetchall()
-        if len(results) == 0:
-            return False
-        else:
-            return results[0]
-    except:
-        return 'error'
+        # 执行查询
+        cursor.execute("SELECT id, username, ip, message, grade, grade_class FROM word")
+        # 获取查询结果
+        rows = cursor.fetchall()
+        # 将结果转换为 JSON 格式
+        data = []
+        for row in rows:
+            data.append({
+                'id': row[0],
+                'username': row[1],
+                'ip': row[2],
+                'message': row[3],
+                'grade': row[4],
+                'class': row[5]
+            })
+        return data
+    except Exception as e:
+        print(e)
+        db.rollback()
+        return 'False'
+    finally:
+        cursor.close()
+
 
 def add_message(username, ip, broswer, message, grade, grade_class):
-    init_time = time.time()
-    # grade = int(grade)
-    # grade_class = int(grade_class)
+    id = int(time.time())
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()
     try:
-        sql = "INSERT INTO python.word(username, init_time, ip, broswer, message, grade, grade_class) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO python.word(id, username, ip, broswer, message, grade, grade_class) VALUES (%s, %s, %s, %s, %s, %s, %s)"
         # 执行插入操作，使用参数化查询以防止 SQL 注入攻击
-        cursor.execute(sql, (username, init_time, ip, broswer, message, grade, grade_class))
+        cursor.execute(sql, (id, username, ip, broswer, message, grade, grade_class))
         # 提交事务并关闭游标
         db.commit()
         return True
