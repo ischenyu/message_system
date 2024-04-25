@@ -16,8 +16,23 @@ redis_pool = redis.ConnectionPool(host='192.168.1.2', port=6379, db=10, password
 redis_client = redis.Redis(connection_pool=redis_pool)
 
 
-# 初始化日志记录器
-# logging.basicConfig(level=logging.ERROR)  # 设置日志级别为 ERROR 或更高级别
+def check_db_connection():
+    global db
+    try:
+        db.ping(reconnect=True)
+    except Exception as e:
+        logging.error("Error reconnecting to the database: %s", e)
+        db = pymysql.connect(host='192.168.1.2', user='root', password='Dingtalk1234561017', database='python')
+
+
+def check_redis_connection():
+    global redis_client
+    try:
+        redis_client.ping()
+    except Exception as e:
+        logging.error("Error reconnecting to Redis: %s", e)
+        redis_pool = redis.ConnectionPool(host='192.168.1.2', port=6379, db=10, password='Dingtalk1234561017')
+        redis_client = redis.Redis(connection_pool=redis_pool)
 
 
 def close_connections():
@@ -56,6 +71,8 @@ def user_signup(username, password, email):
 
 def user_login(username, password):
     try:
+        check_db_connection()
+        check_redis_connection()
         password_hash = hashlib.sha256(password.encode()).hexdigest()
         cached_user = redis_client.get(username)
         if cached_user:
@@ -80,6 +97,7 @@ def user_login(username, password):
 
 
 def user_forget(email, password):
+    check_db_connection()
     password = hashlib.sha256(password.encode()).hexdigest()
     # 判断用户邮箱是否存在
     sql_user_init = """SELECT * FROM python.user WHERE email='%s'""" % email
@@ -114,6 +132,7 @@ def user_forget(email, password):
 
 
 def get_message():
+    check_db_connection()
     cursor = db.cursor()
     try:
         # 执行查询
@@ -141,6 +160,7 @@ def get_message():
 
 
 def add_message(username, ip, broswer, message, grade, grade_class):
+    check_db_connection()
     id = int(time.time())
     # 使用cursor()方法获取操作游标
     cursor = db.cursor()

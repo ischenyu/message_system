@@ -4,16 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="62a86e1b-9381-43b7-8e8f-763df5d9c61a" name="Changes" comment="修改提交留言不能正常显示提示及对IP请求频率限制">
-      <change afterPath="$PROJECT_DIR$/static/index.js" afterDir="false" />
+    <list default="true" id="62a86e1b-9381-43b7-8e8f-763df5d9c61a" name="Changes" comment="添加查看功能">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/mysqldb.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/mysqldb.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/create.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/create.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/forget.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/forget.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/register.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/register.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/create.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/create.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +72,7 @@
     "DefaultHtmlFileTemplate": "HTML File",
     "Flask server.Flask (app.py).executor": "Run",
     "Flask server.Flask.executor": "Debug",
-    "Flask 服务器.Flask.executor": "Debug",
+    "Flask 服务器.Flask.executor": "Run",
     "JavaScript 调试.create.html.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -205,7 +198,8 @@
       <workItem from="1713070278244" duration="11143000" />
       <workItem from="1713589495511" duration="444000" />
       <workItem from="1713611994081" duration="4103000" />
-      <workItem from="1713697530440" duration="4991000" />
+      <workItem from="1713697530440" duration="5054000" />
+      <workItem from="1714044605731" duration="1450000" />
     </task>
     <task id="LOCAL-00001" summary="重构代码，修复不合理和错误">
       <option name="closed" value="true" />
@@ -311,7 +305,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713080540579</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="添加查看功能">
+      <option name="closed" value="true" />
+      <created>1713703234345</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1713703234345</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -351,10 +353,11 @@
     <MESSAGE value="修改页面样式" />
     <MESSAGE value="修改页面样式，更新提交留言、记录IP功能" />
     <MESSAGE value="修改提交留言不能正常显示提示及对IP请求频率限制" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改提交留言不能正常显示提示及对IP请求频率限制" />
+    <MESSAGE value="添加查看功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="添加查看功能" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/web$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1710046171181" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/web$Flask.coverage" NAME="Flask 覆盖结果" MODIFIED="1713701327215" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/web$Flask.coverage" NAME="Flask 覆盖结果" MODIFIED="1714045293474" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>
