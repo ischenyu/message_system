@@ -43,7 +43,7 @@ layui.use(['form', 'jquery'], function(){
                 // 处理成功响应
                 if(response.code === 200){
                     layer.msg('提交成功', {icon: 6});
-                }if(response.code === 500){
+                }if(response.code === 250){
                     layer.msg('服务器内部错误', {icon: 5});
                 }if(response.code === 429){
                     layer.msg('请求过快，服务器拒绝了你的请求(你想把我的数据库存炸是不可能的￣へ￣)', {icon: 5});

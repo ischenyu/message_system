@@ -21,8 +21,10 @@ layui.use(function(){
                     var newLocation = '/';
                     // 执行页面重定向
                     window.location.href = newLocation;
-                }else{
-                    layer.msg('登录失败', {icon: 5});
+                }else if(res.code === 401){
+                    layer.msg('用户名或密码错误', {icon: 5});
+                }else if(res.code === 429){
+                    layer.msg('请求过快，服务器拒绝了你的请求', {icon: 5});
                 }
             },
             error: function(xhr, status, error) {
@@ -32,6 +34,5 @@ layui.use(function(){
     
         return false; // 阻止默认 form 跳转
     });
-    
-    
+
   });

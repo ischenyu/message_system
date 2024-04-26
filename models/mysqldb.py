@@ -35,14 +35,6 @@ def check_redis_connection():
         redis_client = redis.Redis(connection_pool=redis_pool)
 
 
-def close_connections():
-    try:
-        if db.open:
-            db.close()
-        redis_pool.disconnect()
-    except Exception as e:
-        logging.error("An error occurred while closing connections: %s", e)
-
 
 def user_signup(username, password, email):
     init_time = int(time.time())
@@ -91,9 +83,6 @@ def user_login(username, password):
     except Exception as e:
         logging.error("An error occurred while user login: %s", e)
         return 'error'
-
-    finally:
-        close_connections()
 
 
 def user_forget(email, password):

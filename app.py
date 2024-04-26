@@ -15,6 +15,30 @@ app.secret_key = 'cookie_key'  # 设置一个用于签名的秘钥
 serializer = URLSafeSerializer(app.secret_key)
 app.config['SECRET_KEY'] = 'your_secret_key'
 
+# 用于存储每个IP地址的请求时间戳
+request_history = defaultdict(list)
+REQUEST_LIMIT = 3  # 每分钟允许的请求数
+TIME_WINDOW = 60  # 时间窗口为60秒
+
+
+def rate_limit_exceeded(ip):
+    current_time = time.time()
+    # 移除时间窗口之外的请求时间戳
+    request_history[ip] = [t for t in request_history[ip] if t > current_time - TIME_WINDOW]
+    return len(request_history[ip]) > REQUEST_LIMIT
+
+
+def rate_limited(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        if rate_limit_exceeded(ip):
+            return jsonify({'error': 'Rate limit exceeded. Try again later.', 'code': 429})
+        request_history[ip].append(time.time())
+        return func(*args, **kwargs)
+
+    return decorated_function
+
 
 @app.route("/")
 def index():
@@ -39,7 +63,6 @@ def get_messages():
     })
 
 
-
 @app.route('/logout', methods=['GET'])
 def logout():
     if request.cookies.get('logining') == 'True':
@@ -53,7 +76,6 @@ def logout():
         return redirect('/')
     else:
         return redirect('/')
-
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -92,6 +114,7 @@ def api():
 
 
 @app.route('/login', methods=['POST', 'GET'])
+@rate_limited
 def api_login():
     if request.method == 'POST':
         try:
@@ -112,7 +135,7 @@ def api_login():
             elif mysqldb.user_login(username, password) == 'error':
                 return jsonify({"message": "服务器内部错误"}), 500
             else:
-                return jsonify({"code": 401, "message": "用户名或密码错误"}), 401
+                return jsonify({"code": 401, "message": "用户名或密码错误"})
         except KeyError:
             return jsonify({"code": 400, "message": "回调数据不完整！"}), 400
     elif request.method == 'GET':
@@ -139,7 +162,7 @@ def captcha():
         email = data.get('email')
         print(email)
         if not email:
-            return jsonify({"success": False, 'message': 'Email is required', 'code':400})
+            return jsonify({"success": False, 'message': 'Email is required', 'code': 400})
 
         # 检查是否已经记录了用户的最近一次请求时间
         if email in last_request_time:
@@ -184,33 +207,6 @@ def api_forget():
         return render_template('forget.html')
 
 
-
-
-# 用于存储每个IP地址的请求时间戳
-request_history = defaultdict(list)
-REQUEST_LIMIT = 1  # 每分钟允许的请求数
-TIME_WINDOW = 60  # 时间窗口为60秒
-
-
-def rate_limit_exceeded(ip):
-    current_time = time.time()
-    # 移除时间窗口之外的请求时间戳
-    request_history[ip] = [t for t in request_history[ip] if t > current_time - TIME_WINDOW]
-    return len(request_history[ip]) > REQUEST_LIMIT
-
-
-def rate_limited(func):
-    @wraps(func)
-    def decorated_function(*args, **kwargs):
-        ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-        if rate_limit_exceeded(ip):
-            return jsonify({'error': 'Rate limit exceeded. Try again later.', 'code': 429})
-        request_history[ip].append(time.time())
-        return func(*args, **kwargs)
-
-    return decorated_function
-
-
 @app.route('/create', methods=['POST', 'GET'])
 @rate_limited
 def user_create():
@@ -226,7 +222,7 @@ def user_create():
         if mysqldb.add_message(username, ip, broswer, message, grade, grade_class):
             return jsonify({"success": True, 'code': 200})
         else:
-            return jsonify({"success": False, 'code': 500})
+            return jsonify({"success": False, 'code': 250})
     elif request.method == 'GET':
         ip = request.headers.get('X-Forwarded-For', request.remote_addr)
         return render_template('create.html', ip=ip)
